@@ -1,0 +1,51 @@
+---
+- name: Install JAVA
+  yum: state=installed pkg={{item}}
+  with_items:
+  - java-1.7.0-openjdk
+  - tar
+  - unzip
+- file: dest=/usr/lib/jvm/java src=/usr/lib/jvm/jre-1.7.0-openjdk.x86_64 state=link
+  when: ansible_distribution == 'CentOS'
+- file: dest=/usr/lib/jvm/java src=/usr/lib/jvm/jre-1.7.0-openjdk state=link
+  when: ansible_distribution == 'Red Hat Enterprise Linux Server' 
+- name: download the tomcat nbinary
+  get_url: 
+     url=http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.0.24/bin/apache-tomcat-8.0.24.zip 
+     dest=/tmp/apache-tomcat-8.0.24.zip
+  register: out_tomcat
+- name: stat tomcat
+  stat: path={{tomcat_home}}
+  register: tomcat_stat
+- name: Unzip tomcat
+  unarchive:
+     src=/tmp/apache-tomcat-8.0.24.zip
+     dest=/opt
+     copy=no
+  when: tomcat_stat.stat.exists == 'True'
+
+- name: Move tomcat
+  command: mv /opt/apache-tomcat-8.0.24 /opt/tomcat
+  when: tomcat_stat.stat.exists == 'True'
+
+- name: Upload tomcat.sh
+  copy:
+    src: tomcat.sh
+    dest: /etc/profile.d/tomcat.sh
+    mode: 0755
+- name: executing tomcat
+  shell: source /etc/profile.d/tomcat.sh
+- name: Creating tomcat init file
+  template:
+    src: tomcat
+    dest: /etc/init.d/tomcat
+    mode: 0755
+- name: executing tomcat startup and shutdown scripts
+  shell: chmod +x {{tomcat_home}}/bin/startup.sh; chmod +x {{tomcat_home}}/bin/shutdown.sh; chmod +x {{tomcat_home}}/bin/catalina.sh
+- name: Creating tomcat users file
+  template:
+    src: tomcat-users.xml
+    dest: /opt/tomcat/conf/tomcat-users.xml
+    mode: 0755
+- name: Start tomcat service
+  service: name=tomcat state=started enabled=yes

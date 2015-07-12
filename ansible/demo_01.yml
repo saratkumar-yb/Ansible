@@ -1,0 +1,9 @@
+---
+ - hosts: webservers
+   vars:
+     my_package: epel-release
+   tasks:
+   - name: Install Nginx
+     yum: state=present name={{ my_package }}    
+   - name: Nginx service 
+     service: state=started name={{ my_package }}    

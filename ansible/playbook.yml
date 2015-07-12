@@ -1,0 +1,26 @@
+---
+- hosts: webservers
+  remote_user: root
+
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: ensure that httpd is started
+    service: name=httpd state=running
+  - name: bootstrap mongodb install
+    copy: src=mongodb-org-3.0.repo
+        dest=/etc/yum.repos.d/
+        owner=root group=root mode=0644
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+- hosts: databases
+  remote_user: root
+
+  tasks:
+  - name: ensure postgresql is at the latest version
+    yum: name=postgresql-server state=latest
+  - name: ensure that postgresql is started
+    service: name=postgresql state=running
+  - name: ensure mongo is at the latest version
+    yum: pkg=mongodb-org state=latest
+

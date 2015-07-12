@@ -1,0 +1,6 @@
+- name: start-guacd
+  service: state=started name=guacd
+- name: stop-guacd
+  service: state=stop name=guacd
+- name: restart-guacd
+  service: state=restarted name=guacd

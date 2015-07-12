@@ -1,0 +1,10 @@
+---
+ - hosts: centos7
+   tasks:
+   - name: running pwd
+     shell: pwds
+     register: pwd_output
+     ignore_errors: true
+   - name: pwd output
+     debug: msg="pwd is Succesful"
+     when: pwd_output|success

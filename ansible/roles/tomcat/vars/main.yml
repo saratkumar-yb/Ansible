@@ -1,0 +1,5 @@
+---
+java_home: '/usr/lib/jvm/java'
+tomcat_home: '/opt/tomcat'
+tomcat_user: 'admin'
+tomcat_pass: 'admin'

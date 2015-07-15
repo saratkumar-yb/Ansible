@@ -1,4 +1,6 @@
 - name: Demonstrate our work in a directory (now called a 'role')
-  hosts: webservers
+  hosts: rhel
+  user: ec2-user
+  sudo: yes
   roles:
     - guacamole

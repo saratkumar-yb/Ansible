@@ -1,0 +1,16 @@
+---
+ - hosts: rhel
+   user: ec2-user
+   sudo: yes
+   tasks:
+   - name: stat tomcat
+     stat: path=/opt/test
+     register: stat
+   - name: print status
+     debug: msg="{{stat.stat.exists}}"
+     when: stat.stat.isdir is defined and not stat.stat.isdir
+   - file: /opt/test  state=directory mode:0755
+     when: stat.stat.isdir is defined and stat.stat.isdir
+   - debug: msg="{{ansible_distribution}}"
+   - name: motd
+     template: src='/root/ansible/motd' dest='/etc/motd'

@@ -17,6 +17,7 @@
     - gcc
     - http://dl.fedoraproject.org/pub/epel/6/x86_64/libtelnet-0.20-2.el6.x86_64.rpm
     - http://dl.fedoraproject.org/pub/epel/6/x86_64/libtelnet-devel-0.20-2.el6.x86_64.rpm
+- file:  path=/var/lib/guacamole/classpath state=directory mode=0755 
 - name: download file guacamole server with sha256 check
   get_url: url=http://sourceforge.net/projects/guacamole/files/current/source/guacamole-server-0.9.7.tar.gz/download dest=/tmp/guacamole-server-0.9.7.tar.gz sha256sum=285f367d89ee51981db84b00698b05b3d9ba5de2fb2922115c9e38d2b9b88d09
 - name: executing guacamole server
@@ -41,8 +42,8 @@
   copy: src={{item.src}} dest={{item.dest}} mode=0755
   with_items: 
     - { src: 'guacamole.properties' , dest: '/root/.guacamole/guacamole.properties' }
-    - { src: 'guacamole-auth-jdbc-mysql-0.9.6.jar' , dest: '/opt/tomcat/webapps/guacamole/WEB-INF/lib/guacamole-auth-jdbc-mysql-0.9.6.jar' }
-    - { src: 'mysql-connector-java-5.1.35-bin.jar' , dest: '/opt/tomcat/webapps/guacamole/WEB-INF/lib/mysql-connector-java-5.1.35-bin.jar' }
+    - { src: 'guacamole-auth-jdbc-mysql-0.9.7.jar' , dest: '/var/lib/guacamole/classpath/guacamole-auth-jdbc-mysql-0.9.7.jar' }
+    - { src: 'mysql-connector-java-5.1.35-bin.jar' , dest: '/var/lib/guacamole/classpath/mysql-connector-java-5.1.35-bin.jar' }
     - { src: 'initdb.sql', dest: '/tmp/guacamole_initdb.sql' }
 - name: Database existance checking
   shell: mysql -u root -e 'show databases' | grep guacamole_db
